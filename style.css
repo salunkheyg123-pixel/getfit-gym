@@ -1,0 +1,91 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    color: #adebad; /* green text */
+    background: url('/static/image/gym.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Poppins', sans-serif;
+}
+
+.header {
+    position: fixed;
+    top: 1rem;   /* small gap from top */
+    left: 1rem;  /* small gap from left */
+    z-index: 50;
+    background-color: rgba(0, 0, 0, 0.5); /* optional */
+    backdrop-filter: blur(5px);
+    padding: 0.25rem 0.5rem;  /* adjust padding */
+    border-radius: 0.25rem;
+}
+
+.header a {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: #22c55e;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.875rem; /* smaller font */
+}
+
+.header a:hover {
+    color: #adebad;
+}
+
+.header svg {
+    height: 1rem;  /* smaller icon */
+    width: 1rem;
+}
+
+
+.login-box {
+    background-color: rgba(31, 41, 55, 0.9); /* semi-transparent dark */
+    padding: 2.5rem 2rem;  /* more padding inside */
+    border-radius: 0.75rem; /* slightly rounder corners */
+    box-shadow: 0 15px 25px rgba(0,0,0,0.5); /* stronger shadow */
+    width: 100%;  /* responsive width */
+    max-width: 400px; /* limit width */
+    text-align: center;
+    margin: 2rem; /* spacing from screen edges */
+}
+
+
+.login-box h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #22c55e; /* green-400 */
+    margin-bottom: 1.5rem;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 0.25rem;
+    background-color: #374151; /* gray-700 */
+    color: #d1fae5; /* green-100 */
+    border: 1px solid #22c55e; /* green-500 */
+}
+
+.login-box button {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    background-color: #22c55e; /* green-400 */
+    color: #111827; /* gray-900 */
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.login-box button:hover {
+    background-color: #16a34a; /* green-300 */
+}
+
+.login-box .error {
+    color: #f87171; /* red-500 */
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}

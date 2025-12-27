@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Member Dashboard - GetFit Gym</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: url("{{ url_for('static', filename='image/gym.jpg') }}") no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+      color: #d1f7c4;
+    }
+    .bg-overlay {
+      background: rgba(26, 29, 43, 0.95);
+      border-radius: 1.5rem;
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      backdrop-filter: blur(12px);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
+    input, select {
+      background: rgba(17, 24, 39, 0.7) !important;
+      border: 1px solid rgba(34, 197, 94, 0.2) !important;
+      color: #4ade80 !important;
+    }
+    input:focus, select:focus {
+      border-color: #4ade80 !important;
+      outline: none;
+      box-shadow: 0 0 10px rgba(74, 222, 128, 0.2);
+    }
+  </style>
+</head>
+<body class="p-4 md:p-8">
+
+  <!-- Header -->
+  <div class="max-w-6xl mx-auto flex justify-between items-center mb-8">
+    <a href="{{ url_for('member_home') }}" class="bg-gray-800/80 text-green-400 px-5 py-2 rounded-full hover:bg-green-500 hover:text-gray-900 transition-all duration-300 font-bold shadow-lg">
+      ← Back
+    </a>
+    <h1 class="text-xl md:text-2xl font-extrabold text-green-400 uppercase tracking-widest">Fitness Analytics</h1>
+    <div class="hidden md:block w-24"></div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+
+    <!-- Input Form -->
+    <div class="bg-overlay p-8 shadow-2xl">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="bg-green-500/20 p-2 rounded-lg text-green-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+        </div>
+        <h2 class="text-2xl font-bold text-white">Body Stats</h2>
+      </div>
+
+      <form id="fitnessForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-green-500 uppercase mb-2 ml-1">Weight (kg)</label>
+          <input type="number" id="weight" placeholder="70" class="w-full p-3 rounded-xl">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-green-500 uppercase mb-2 ml-1">Height (cm)</label>
+          <input type="number" id="height" placeholder="175" class="w-full p-3 rounded-xl">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-green-500 uppercase mb-2 ml-1">Age</label>
+          <input type="number" id="age" placeholder="25" class="w-full p-3 rounded-xl">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-green-500 uppercase mb-2 ml-1">Gender</label>
+          <select id="gender" class="w-full p-3 rounded-xl">
+            <option>Male</option>
+            <option>Female</option>
+          </select>
+        </div>
+        <div class="col-span-2">
+          <label class="block text-xs font-bold text-green-500 uppercase mb-2 ml-1">Activity Level</label>
+          <select id="activity" class="w-full p-3 rounded-xl">
+            <option>Sedentary (Little/no exercise)</option>
+            <option>Lightly Active (1-3 days/week)</option>
+            <option>Moderately Active (3-5 days/week)</option>
+            <option>Very Active (6-7 days/week)</option>
+          </select>
+        </div>
+
+        <button type="button" onclick="calculateFitness()"
+                class="col-span-2 bg-gradient-to-r from-red-600 to-orange-600 text-white font-extrabold py-4 rounded-xl hover:from-red-500 hover:to-orange-500 transform hover:scale-[1.02] transition-all shadow-xl mt-4 uppercase tracking-widest">
+          Update Metrics
+        </button>
+      </form>
+    </div>
+
+    <!-- Results Panel -->
+    <div class="bg-overlay p-8 shadow-2xl flex flex-col justify-between">
+      <div>
+        <h2 class="text-2xl font-bold text-white mb-8 border-b border-white/10 pb-4">Performance Report</h2>
+
+        <!-- BMI -->
+        <div class="mb-10">
+          <div class="flex justify-between items-end mb-2">
+            <p class="text-sm font-bold text-green-500 uppercase tracking-widest">BMI Analysis</p>
+            <p id="bmiResult" class="text-2xl font-extrabold text-white">0.0</p>
+          </div>
+          <div class="w-full bg-gray-800 rounded-full h-3 overflow-hidden border border-white/5">
+            <div id="bmiBar" class="bg-gradient-to-r from-green-500 to-yellow-400 h-full transition-all duration-1000" style="width:0%"></div>
+          </div>
+          <p id="bmiStatus" class="text-[10px] text-gray-400 mt-2 uppercase font-bold tracking-widest text-right">No data entered</p>
+        </div>
+
+        <!-- Other Metrics -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="glass-card p-4 rounded-2xl text-center">
+            <p class="text-[10px] font-bold text-purple-400 uppercase mb-1">Target BMI</p>
+            <p class="text-xl font-bold text-white">18.5 - 24.9</p>
+          </div>
+          <div class="glass-card p-4 rounded-2xl text-center">
+            <p class="text-[10px] font-bold text-red-500 uppercase mb-1">Max Heart Rate</p>
+            <p class="text-xl font-bold text-white" id="mhr">0 <span class="text-xs text-gray-500">bpm</span></p>
+          </div>
+          <div class="glass-card p-4 rounded-2xl text-center">
+            <p class="text-[10px] font-bold text-blue-400 uppercase mb-1">Est. Body Fat</p>
+            <p class="text-xl font-bold text-white" id="bodyFat">0%</p>
+          </div>
+          <div class="glass-card p-4 rounded-2xl text-center">
+            <p class="text-[10px] font-bold text-yellow-500 uppercase mb-1">Ideal Weight</p>
+            <p class="text-xl font-bold text-white" id="idealWeight">0 <span class="text-xs text-gray-500">kg</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8 p-4 bg-green-500/5 rounded-xl border border-green-500/20">
+        <p class="text-[10px] text-green-400 font-medium leading-relaxed italic">
+          * These results are estimates based on standard formulas. Consult your assigned trainer for a professional evaluation.
+        </p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center py-12 text-green-900 text-[10px] font-bold tracking-[0.5em] uppercase">
+    © 2025 GetFit Gym · Biometric Intelligence
+  </footer>
+
+  <!-- Script -->
+  <script>
+    function calculateFitness() {
+      const weight = parseFloat(document.getElementById('weight').value);
+      const height = parseFloat(document.getElementById('height').value);
+      const age = parseFloat(document.getElementById('age').value);
+      const gender = document.getElementById('gender').value;
+
+      if (!weight || !height || !age) return;
+
+      const heightM = height / 100;
+      const bmi = weight / (heightM * heightM);
+      document.getElementById('bmiResult').innerText = bmi.toFixed(1);
+
+      let status = "Underweight";
+      if (bmi >= 18.5 && bmi < 25) status = "Healthy Weight";
+      else if (bmi >= 25 && bmi < 30) status = "Overweight";
+      else if (bmi >= 30) status = "Obese";
+
+      document.getElementById('bmiStatus').innerText = status;
+      document.getElementById('bmiBar').style.width = Math.min((bmi / 40) * 100, 100) + "%";
+
+      const mhr = 220 - age;
+      document.getElementById('mhr').innerHTML = `${mhr} <span class="text-xs text-gray-500">bpm</span>`;
+
+      const bodyFat = (gender === "Male") 
+        ? (1.20 * bmi) + (0.23 * age) - 16.2 
+        : (1.20 * bmi) + (0.23 * age) - 5.4;
+      document.getElementById('bodyFat').innerText = Math.max(0, bodyFat).toFixed(1) + "%";
+
+      const idealWeight = 22 * heightM * heightM;
+      document.getElementById('idealWeight').innerHTML = `${idealWeight.toFixed(1)} <span class="text-xs text-gray-500">kg</span>`;
+    }
+  </script>
+
+</body>
+</html>

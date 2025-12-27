@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GetFit | Elite Fitness Club</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/4d2d3e8e5a.js" crossorigin="anonymous"></script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #0a0c10;
+      color: #e2e8f0;
+      scroll-behavior: smooth;
+    }
+    .hero {
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url("{{ url_for('static', filename='image/gym.jpg') }}") no-repeat center center/cover;
+      height: 100vh;
+    }
+    .glass-nav {
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.5);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .glass-card:hover {
+      transform: translateY(-10px);
+      border-color: #4ade80;
+      box-shadow: 0 10px 30px -10px rgba(34, 197, 94, 0.3);
+    }
+    .dropdown:hover .dropdown-menu {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-green-500 text-gray-900 py-2 px-6 hidden md:flex justify-between items-center text-xs font-bold uppercase tracking-widest">
+    <div class="flex gap-6">
+      <span><i class="fas fa-phone-alt mr-2"></i> 8591651893</span>
+      <span><i class="fas fa-map-marker-alt mr-2"></i> New York, Baton</span>
+    </div>
+    <div class="flex gap-4 text-sm">
+      <a href="#" class="hover:scale-110 transition-transform"><i class="fab fa-instagram"></i></a>
+      <a href="#" class="hover:scale-110 transition-transform"><i class="fab fa-facebook"></i></a>
+      <a href="#" class="hover:scale-110 transition-transform"><i class="fab fa-whatsapp"></i></a>
+    </div>
+  </div>
+
+  <nav class="glass-nav sticky top-0 z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <h1 class="text-3xl font-extrabold text-green-400 tracking-tighter italic">GET<span class="text-white">FIT</span></h1>
+      
+      <ul class="hidden md:flex items-center gap-8 font-semibold text-sm uppercase tracking-wider">
+        <li><a href="{{ url_for('home') }}" class="text-green-400">Home</a></li>
+        <li><a href="#services" class="hover:text-green-400 transition">Services</a></li>
+        <li><a href="{{ url_for('contact') }}" class="hover:text-green-400 transition">Contact</a></li>
+        <li><a href="{{ url_for('review') }}" class="hover:text-green-400 transition">Reviews</a></li>
+        
+        <li class="relative dropdown">
+          <button class="bg-green-500 text-gray-900 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-green-400 transition">
+            <i class="fas fa-user-circle"></i> LOGIN <i class="fas fa-chevron-down text-[10px]"></i>
+          </button>
+          <div class="dropdown-menu hidden absolute right-0 mt-2 w-48 bg-slate-900 border border-green-500/30 rounded-xl overflow-hidden shadow-2xl">
+            <a href="{{ url_for('login') }}" class="block px-4 py-3 text-xs hover:bg-green-500 hover:text-gray-900 border-b border-white/5 transition">ADMIN PORTAL</a>
+            <a href="{{ url_for('trainer_login') }}" class="block px-4 py-3 text-xs hover:bg-green-500 hover:text-gray-900 border-b border-white/5 transition">TRAINER HUB</a>
+            <a href="{{ url_for('member_login') }}" class="block px-4 py-3 text-xs hover:bg-green-500 hover:text-gray-900 transition">MEMBER ACCESS</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <section class="hero flex items-center justify-center text-center px-6">
+    <div class="max-w-4xl">
+      <span class="bg-green-500/20 text-green-400 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-6 inline-block border border-green-500/30">Premium Fitness Experience</span>
+      <h2 class="text-5xl md:text-8xl font-extrabold text-white mb-6 tracking-tighter uppercase leading-none">
+        Transform Your <span class="text-green-400 italic">Body</span>
+      </h2>
+      <p class="text-lg md:text-xl text-gray-300 mb-10 font-light max-w-2xl mx-auto">
+        Join the elite circle of fitness enthusiasts. Professional coaching, bespoke nutrition, and state-of-the-art infrastructure.
+      </p>
+      <div class="flex flex-col md:flex-row gap-4 justify-center">
+        <a href="{{ url_for('join') }}" class="bg-green-500 text-gray-900 px-10 py-4 rounded-xl font-extrabold uppercase tracking-widest hover:bg-green-400 transition-all shadow-[0_0_20px_rgba(34,197,94,0.4)]">Start Today</a>
+        <a href="#services" class="bg-white/10 text-white px-10 py-4 rounded-xl font-extrabold uppercase tracking-widest hover:bg-white/20 transition-all border border-white/10">Explore Club</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="py-24 px-6 max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-5xl font-extrabold uppercase tracking-tighter">Our <span class="text-green-400 underline decoration-2 underline-offset-8">Services</span></h2>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="glass-card p-6 rounded-3xl group">
+        <div class="overflow-hidden rounded-2xl mb-6">
+          <img src="{{ url_for('static', filename='image/service1.jpg') }}" alt="Training" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500">
+        </div>
+        <h3 class="text-xl font-bold mb-3 text-green-400">Personal Training</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">Achieve your goals faster with dedicated one-on-one sessions tailored to your body type.</p>
+      </div>
+
+      <div class="glass-card p-6 rounded-3xl group">
+        <div class="overflow-hidden rounded-2xl mb-6">
+          <img src="{{ url_for('static', filename='image/service2.jpg') }}" alt="Nutrition" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500">
+        </div>
+        <h3 class="text-xl font-bold mb-3 text-green-400">Nutrition Plans</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">Science-based meal plans designed to complement your training and maximize recovery.</p>
+      </div>
+
+      <div class="glass-card p-6 rounded-3xl group">
+        <div class="overflow-hidden rounded-2xl mb-6">
+          <img src="{{ url_for('static', filename='image/service3.jpg') }}" alt="Group" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500">
+        </div>
+        <h3 class="text-xl font-bold mb-3 text-green-400">Group Classes</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">Join high-octane group sessions from Yoga to HIIT and draw energy from the community.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-24 bg-green-500/5 border-y border-white/5">
+    <div class="max-w-4xl mx-auto text-center px-6">
+      <i class="fas fa-quote-left text-5xl text-green-500/20 mb-8"></i>
+      <p class="text-2xl md:text-3xl font-medium italic text-gray-200 leading-relaxed">
+        "This gym changed my life! The trainers are amazing, and the energy here keeps me motivated every day. The best equipment in the city!"
+      </p>
+      <div class="mt-8">
+        <h4 class="font-bold text-green-400 uppercase tracking-widest text-sm">— Alex Johnson, Member since 2023</h4>
+      </div>
+    </div>
+  </section>
+
+  <footer class="py-12 px-6 border-t border-white/5">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+      <h1 class="text-2xl font-extrabold text-green-400 tracking-tighter italic">GET<span class="text-white">FIT</span></h1>
+      <p class="text-gray-500 text-xs font-bold uppercase tracking-[0.3em]">© 2025 GetFit Gym · Unleash Your Potential</p>
+      <div class="flex gap-6 text-gray-400">
+        <a href="#" class="hover:text-green-400 transition"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/jackevans5597/" class="hover:text-green-400 transition"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='home.js') }}"></script>
+</body>
+</html>

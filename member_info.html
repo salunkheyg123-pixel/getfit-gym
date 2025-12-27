@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Members Information - GetFit Gym</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: url("{{ url_for('static', filename='image/gym.jpg') }}") no-repeat center center fixed;
+      background-size: cover;
+      color: #d1f7c4;
+      min-height: 100vh;
+    }
+    .bg-overlay {
+      background: rgba(26, 29, 43, 0.95);
+      border-radius: 0.75rem;
+      padding: 2rem;
+      border: 1px solid #065f46; /* green-900 */
+    }
+  </style>
+</head>
+<body class="p-6">
+
+  <div class="max-w-6xl mx-auto flex justify-between items-center mb-8">
+    <a href="{{ url_for('trainer_home') }}" 
+       class="inline-block bg-gray-700/80 text-green-400 px-5 py-2 rounded-full hover:bg-green-500 hover:text-gray-900 transition-all duration-300 font-semibold shadow-lg">
+       ← Back to Dashboard
+    </a>
+    <h1 class="text-3xl font-bold text-green-400 uppercase tracking-widest">Members Directory</h1>
+    <div class="w-32"></div> </div>
+
+  <div class="max-w-6xl mx-auto">
+    {% if Members %}
+    <div class="bg-overlay shadow-2xl">
+      <div class="overflow-x-auto">
+        <table class="min-w-full border-collapse">
+          <thead>
+            <tr class="bg-green-900/40 text-green-300 text-sm uppercase">
+              <th class="p-4 border-b border-green-800 text-left">ID</th>
+              <th class="p-4 border-b border-green-800 text-left">Member Name</th>
+              <th class="p-4 border-b border-green-800 text-left">Contact Info</th>
+              <th class="p-4 border-b border-green-800 text-center">Plan</th>
+              <th class="p-4 border-b border-green-800 text-center">Activity</th>
+              <th class="p-4 border-b border-green-800 text-center">Assigned Trainer</th>
+            </tr>
+          </thead>
+          <tbody class="text-green-100">
+            {% for member in Members %}
+            <tr class="hover:bg-green-800/20 border-b border-green-900/50 transition-colors">
+              <td class="p-4">#{{ member.id }}</td>
+              <td class="p-4 font-semibold text-white text-lg">{{ member.name }}</td>
+              <td class="p-4">
+                <div class="text-sm">{{ member.email }}</div>
+                <div class="text-xs text-green-500">{{ member.number }}</div>
+              </td>
+              <td class="p-4 text-center">
+                <span class="px-3 py-1 bg-gray-800 rounded-full text-xs border border-green-700 capitalize">
+                    {{ member.plan }}
+                </span>
+              </td>
+              <td class="p-4 text-center text-green-300 font-medium">{{ member.description }}</td>
+              <td class="p-4 text-center">
+                  {% if member.trainer %}
+                    <span class="text-yellow-400 font-bold">
+                       {{ member.trainer.name }}
+                    </span>
+                  {% else %}
+                    <span class="text-gray-500 italic">Not Assigned</span>
+                  {% endif %}
+              </td>
+
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% else %}
+    <div class="bg-overlay text-center py-12">
+        <p class="text-2xl text-red-400 mb-2 font-bold">No Members Registered</p>
+        <p class="text-gray-400">Records will appear here once members are added through the Admin Panel.</p>
+    </div>
+    {% endif %}
+
+    <footer class="text-center text-green-600 mt-12 text-sm">
+      © 2025 GetFit Gym Management System. Developed for Trainers.
+    </footer>
+  </div>
+
+</body>
+</html>

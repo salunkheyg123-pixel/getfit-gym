@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Reviews | GetFit Gym</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: url("{{ url_for('static', filename='image/gym.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            color: #d1f7c4;
+        }
+
+        /* Glass background */
+        .glass-box {
+            background: rgba(26, 29, 43, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        /* Review card */
+        .review-box {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .review-box:hover {
+            border-color: rgba(34, 197, 94, 0.4);
+            background: rgba(34, 197, 94, 0.05);
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-8">
+
+    <!-- Page Header -->
+    <div class="max-w-6xl mx-auto flex justify-between items-center mb-10">
+        <a href="{{ url_for('home') }}"
+           class="px-5 py-2 rounded-full bg-gray-800/80 text-green-400 hover:bg-green-500 hover:text-gray-900 transition font-bold">
+            ← Back
+        </a>
+
+        <h1 class="text-2xl md:text-3xl font-extrabold text-green-400 uppercase tracking-widest">
+            Member Reviews
+        </h1>
+
+        <div class="hidden md:block w-24"></div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <!-- Review Form -->
+        <aside class="lg:col-span-1">
+            <div class="glass-box p-8 rounded-2xl shadow-xl sticky top-8">
+
+                <h2 class="text-xl font-bold text-white mb-6 border-b border-green-900 pb-2">
+                    Share Your Experience
+                </h2>
+
+                <form method="POST" action="{{ url_for('review') }}" class="space-y-4">
+
+                    <div>
+                        <label class="block text-xs font-bold text-green-500 mb-1">
+                            Full Name
+                        </label>
+                        <input type="text" name="name" required
+                               placeholder="Your name"
+                               class="w-full p-3 rounded-xl bg-gray-800/60 border border-green-900 text-green-100 outline-none focus:border-green-400">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-green-500 mb-1">
+                            Rating
+                        </label>
+                        <select name="rating" required
+                                class="w-full p-3 rounded-xl bg-gray-800/60 border border-green-900 text-green-100 outline-none focus:border-green-400">
+                            <option value="" disabled selected>Select rating</option>
+                            <option value="5">★★★★★ Excellent</option>
+                            <option value="4">★★★★☆ Good</option>
+                            <option value="3">★★★☆☆ Average</option>
+                            <option value="2">★★☆☆☆ Poor</option>
+                            <option value="1">★☆☆☆☆ Bad</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-green-500 mb-1">
+                            Comment
+                        </label>
+                        <textarea name="comment" rows="4" required
+                                  placeholder="Write your feedback"
+                                  class="w-full p-3 rounded-xl bg-gray-800/60 border border-green-900 text-green-100 outline-none focus:border-green-400"></textarea>
+                    </div>
+
+                    <button type="submit"
+                            class="w-full bg-green-500 text-gray-900 font-bold py-3 rounded-xl hover:bg-green-400 transition shadow-lg">
+                        Post Review
+                    </button>
+
+                </form>
+            </div>
+        </aside>
+
+        <!-- Reviews Section -->
+        <main class="lg:col-span-2">
+            <div class="glass-box p-8 rounded-2xl shadow-xl min-h-[600px]">
+
+                <h2 class="text-xl font-bold text-white mb-8">
+                    What Members Say
+                </h2>
+
+                {% if reviews %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    {% for review in reviews %}
+                    <div class="review-box p-6 rounded-2xl flex flex-col justify-between">
+
+                        <div>
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-yellow-400 font-bold text-sm">
+                                    {% for i in range(review.rating) %}★{% endfor %}
+                                </span>
+                                <span class="text-[10px] text-gray-500 uppercase font-bold">
+                                    Verified
+                                </span>
+                            </div>
+
+                            <p class="italic text-green-100 mb-4">
+                                "{{ review.comment }}"
+                            </p>
+                        </div>
+
+                        <div class="border-t border-white/10 pt-4">
+                            <p class="font-bold text-green-400 text-sm">
+                                {{ review.name }}
+                            </p>
+                        </div>
+
+                    </div>
+                    {% endfor %}
+
+                </div>
+                {% else %}
+                <p class="text-center text-gray-500 italic mt-20">
+                    No reviews yet. Be the first one!
+                </p>
+                {% endif %}
+
+            </div>
+        </main>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-12 text-green-800 text-xs tracking-widest uppercase">
+        © 2025 GetFit Gym
+    </footer>
+
+</body>
+</html>

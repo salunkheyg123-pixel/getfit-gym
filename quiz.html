@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GetFit Gym Quiz</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: url("{{ url_for('static', filename='image/gym.jpg') }}") no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+      color: #d1f7c4;
+    }
+
+    .glass-box {
+      background: rgba(26, 29, 43, 0.95);
+      border-radius: 1.5rem;
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    .option-btn {
+      transition: all 0.2s ease;
+      border: 1px solid rgba(74, 222, 128, 0.2);
+    }
+
+    .option-btn:hover {
+      background: rgba(74, 222, 128, 0.1);
+      transform: translateX(10px);
+      border-color: #4ade80;
+    }
+  </style>
+</head>
+<body class="p-4 md:p-8 flex flex-col items-center">
+
+  <!-- Header -->
+  <div class="w-full max-w-3xl flex justify-between items-center mb-8">
+    <a href="{{ url_for('member_home') }}" 
+       class="bg-gray-800/80 text-green-400 px-5 py-2 rounded-full hover:bg-green-500 hover:text-gray-900 font-bold shadow-lg transition">
+       ← Back
+    </a>
+    <h1 class="text-xl md:text-2xl font-extrabold text-green-400 uppercase tracking-widest">Fitness Quiz</h1>
+    <div class="w-16"></div>
+  </div>
+
+  <!-- Main Quiz Container -->
+  <main class="glass-box w-full max-w-3xl p-8 md:p-12 shadow-2xl">
+
+    <!-- Difficulty Selection -->
+    <div id="difficulty-container" class="text-center space-y-8">
+      <div>
+        <h2 class="text-3xl font-extrabold text-white mb-2">Test Your Knowledge</h2>
+        <p class="text-gray-400">Choose a level to challenge your fitness IQ</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <button onclick="startQuiz('basic')" class="bg-green-500 text-gray-900 font-extrabold py-4 rounded-xl hover:bg-green-400 transform hover:scale-105 shadow-lg transition">
+          BASIC
+        </button>
+        <button onclick="startQuiz('medium')" class="bg-yellow-500 text-gray-900 font-extrabold py-4 rounded-xl hover:bg-yellow-400 transform hover:scale-105 shadow-lg transition">
+          MEDIUM
+        </button>
+        <button onclick="startQuiz('advanced')" class="bg-red-500 text-white font-extrabold py-4 rounded-xl hover:bg-red-400 transform hover:scale-105 shadow-lg transition">
+          ADVANCED
+        </button>
+      </div>
+    </div>
+
+    <!-- Quiz Questions -->
+    <div id="quiz-container" class="hidden">
+      <div class="flex justify-between items-center mb-6">
+        <span id="level-badge" class="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-tighter">Level: Basic</span>
+        <span id="progress-text" class="text-gray-500 text-sm font-bold tracking-widest">Question 1/10</span>
+      </div>
+
+      <h2 id="question" class="text-2xl md:text-3xl font-bold text-white mb-8">Question will appear here</h2>
+      
+      <div id="options" class="grid grid-cols-1 gap-4 mb-8"></div>
+    </div>
+
+    <!-- Quiz Result -->
+    <div id="result-container" class="hidden text-center space-y-6">
+      <div class="py-10">
+        <h2 class="text-5xl font-extrabold text-green-400 mb-2">FINISHED!</h2>
+        <p id="score" class="text-2xl text-white font-light"></p>
+      </div>
+      
+      <button onclick="restartQuiz()" class="w-full bg-green-500 text-gray-900 font-extrabold py-4 rounded-xl hover:bg-green-400 transition shadow-xl uppercase tracking-widest">
+        Try Another Level
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-12 text-green-800 text-xs tracking-[0.4em] font-bold uppercase">
+    © 2025 GetFit Gym Knowledge Base
+  </footer>
+
+  <!-- Quiz Script -->
+  <script>
+    // Quiz data
+    const quizData = {
+      basic: [
+        { question: "Which nutrient is primarily used for muscle repair?", options: ["Protein", "Carbs", "Fat", "Fiber"], answer: "Protein" },
+        { question: "What is the main benefit of cardio?", options: ["Heart health", "Muscle building", "Flexibility", "Balance"], answer: "Heart health" },
+        { question: "How many days a week should beginners exercise?", options: ["1-2", "3-4", "5-6", "7"], answer: "3-4" },
+        { question: "Which exercise strengthens the core?", options: ["Plank", "Squats", "Pushups", "Bicep curls"], answer: "Plank" },
+        { question: "Which nutrient provides quick energy?", options: ["Carbohydrates", "Protein", "Fat", "Vitamins"], answer: "Carbohydrates" }
+      ],
+      medium: [
+        { question: "How many reps are ideal for strength training?", options: ["8-12", "15-20", "20-25", "5-7"], answer: "8-12" },
+        { question: "Which exercise targets the chest?", options: ["Bench Press", "Deadlift", "Bicep Curl", "Squat"], answer: "Bench Press" }
+      ],
+      advanced: [
+        { question: "Which hormone is released during exercise?", options: ["Endorphins", "Insulin", "Cortisol", "Glucagon"], answer: "Endorphins" },
+        { question: "Optimal rest between heavy lifts?", options: ["2-5 min", "30 sec", "1 min", "10 min"], answer: "2-5 min" }
+      ]
+    };
+
+    let currentQuestion = 0;
+    let score = 0;
+    let selectedDifficulty = '';
+    let currentQuiz = [];
+
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const quizContainer = document.getElementById("quiz-container");
+    const resultContainer = document.getElementById("result-container");
+    const scoreEl = document.getElementById("score");
+    const difficultyContainer = document.getElementById("difficulty-container");
+    const levelBadge = document.getElementById("level-badge");
+    const progressText = document.getElementById("progress-text");
+
+    function startQuiz(difficulty) {
+      selectedDifficulty = difficulty;
+      currentQuiz = quizData[difficulty];
+      currentQuestion = 0;
+      score = 0;
+      levelBadge.innerText = `Level: ${difficulty}`;
+      difficultyContainer.classList.add("hidden");
+      quizContainer.classList.remove("hidden");
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      const current = currentQuiz[currentQuestion];
+      questionEl.innerText = current.question;
+      progressText.innerText = `Question ${currentQuestion + 1}/${currentQuiz.length}`;
+      optionsEl.innerHTML = "";
+
+      current.options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn text-left p-4 rounded-xl bg-gray-800 text-green-100 font-medium";
+        btn.innerText = option;
+        btn.onclick = () => selectOption(option, btn);
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    function selectOption(selected, btn) {
+      const correct = currentQuiz[currentQuestion].answer;
+
+      // Disable all options
+      Array.from(optionsEl.children).forEach(b => b.disabled = true);
+
+      if(selected === correct) {
+        score++;
+        btn.classList.add("bg-green-500", "text-gray-900", "border-green-500");
+      } else {
+        btn.classList.add("bg-red-500", "text-white", "border-red-500");
+      }
+
+      setTimeout(() => {
+        currentQuestion++;
+        if(currentQuestion < currentQuiz.length) loadQuestion();
+        else showResult();
+      }, 600);
+    }
+
+    function showResult() {
+      quizContainer.classList.add("hidden");
+      resultContainer.classList.remove("hidden");
+      scoreEl.innerHTML = `You scored <span class="text-green-400 font-bold">${score}</span> out of ${currentQuiz.length}<br><span class="text-sm text-gray-400 mt-2 block">Level: ${selectedDifficulty.toUpperCase()}</span>`;
+    }
+
+    function restartQuiz() {
+      resultContainer.classList.add("hidden");
+      difficultyContainer.classList.remove("hidden");
+    }
+  </script>
+
+</body>
+</html>
